@@ -12,11 +12,11 @@ const port = 3000;
 
 // TODO: Fill with strings of your favorite quotes :)
 const quotes = [
-  'one',
-  'two',
-  'three',
-  'four',
-  'five'
+  'Never should have come here!',
+  'Let me guess. Someone stole your sweetroll.',
+  'Sorry lass, I\'ve got important things to do.',
+  'Kill Paarthunax',
+  'My parents said not to talk to strangers, but you seem alright.'
 ];
 
 //Utility Function to return a random integer
@@ -37,13 +37,20 @@ const handleRequest = function(req, res) {
   }
 
   // TODO: GET ONE
-  if ((req.url == '/quote/' || req.url == '/quote') && req.method == "FILL ME IN") {
-    //YOUR CODE HERE
+  if ((req.url == '/quote/' || req.url == '/quote') && req.method == "GET") {
+    var randomIndex = getRandomInt(0, quotes.length);
+    res.writeHead(200, headers);
+    res.write(`<q>${quotes[randomIndex]}</q>`);
+    res.end()
 
   }
   // TODO: POST/CREATE
-  else if ((req.url == 'FILL ME IN' || req.url == 'FILL ME IN') && req.method == "FILL ME IN") {
-    //YOUR CODE HERE
+  else if ((req.url == '/quote/' || req.url == '/quote') && req.method == "POST") {
+    console.log(req.text);
+    quotes.push(req.text);
+    res.writeHead(200, headers);
+    res.write('<span>Quote Added to Library</span>')
+    res.end()
   }
 
 //CATCH ALL ROUTE
