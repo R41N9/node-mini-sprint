@@ -1,4 +1,6 @@
 const http = require('http');
+const express = require('express');
+const app = express();
 
 //headers to allows CORS requests
 const headers = {
@@ -26,43 +28,62 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-const handleRequest = function(req, res) {
-  console.log(`Endpoint: ${req.url} Method: ${req.method}`);
+// const handleRequest = function(req, res) {
+//   console.log(`Endpoint: ${req.url} Method: ${req.method}`);
 
-  // redirect users to /quote if they try to hit the homepage. This should already work, no changes needed
-  if (req.url == '/') {
-    console.log('redirecting');
-    res.writeHead(301, {...headers, Location: `http://localhost:${port}/quote`}) //redirect to quote
-    res.end();
-  }
+//   // redirect users to /quote if they try to hit the homepage. This should already work, no changes needed
+//   if (req.url == '/') {
+//     console.log('redirecting');
+//     res.writeHead(301, {...headers, Location: `http://localhost:${port}/quote`}) //redirect to quote
+//     res.end();
+//   }
 
-  // TODO: GET ONE
-  if ((req.url == '/quote/' || req.url == '/quote') && req.method == "GET") {
-    var randomIndex = getRandomInt(0, quotes.length);
-    res.writeHead(200, headers);
-    res.write(`<q>${quotes[randomIndex]}</q>`);
-    res.end()
+//   // TODO: GET ONE
+//   if ((req.url == '/quote/' || req.url == '/quote') && req.method == "GET") {
+//     var randomIndex = getRandomInt(0, quotes.length);
+//     res.writeHead(200, headers);
+//     res.write(`<q>${quotes[randomIndex]}</q>`);
+//     res.end()
 
-  }
-  // TODO: POST/CREATE
-  else if ((req.url == '/quote/' || req.url == '/quote') && req.method == "POST") {
-    console.log(req.text);
+//   }
+//   // TODO: POST/CREATE
+//   else if ((req.url == '/quote/' || req.url == '/quote') && req.method == "POST") {
+//     console.log(req.text);
+//     quotes.push(req.text);
+//     res.writeHead(200, headers);
+//     res.write('<span>Quote Added to Library</span>')
+//     res.end()
+//   }
+
+// //CATCH ALL ROUTE
+//   else {
+//     res.writeHead(404,headers);
+//     res.end('Page not found');
+
+//   }
+// }
+
+app.get('/', (req, res) => {
+  res.redirect(301, `http://localhost:${port}/quote`);
+  res.end()
+})
+
+app.route('/quote')
+  .get((req, res) => {
+    randomIdx = getRandomInt(0, quotes.length);
+    res.send(`${quotes[randomIdx]}`);
+  })
+  .post((req, res) => {
     quotes.push(req.text);
-    res.writeHead(200, headers);
-    res.write('<span>Quote Added to Library</span>')
-    res.end()
-  }
+    res.send('Quote added to library');
+  })
 
-//CATCH ALL ROUTE
-  else {
-    res.writeHead(404,headers);
-    res.end('Page not found');
+// const server = http.createServer(app);
+// server.listen(port);
 
-  }
-}
+app.listen(port, () => {
+  console.log('Server is running in the terminal!');
+  console.log(`Listening on http://localhost:${port}`);
+})
 
-const server = http.createServer(handleRequest);
-server.listen(port);
 
-console.log('Server is running in the terminal!');
-console.log(`Listening on http://localhost:${port}`);
