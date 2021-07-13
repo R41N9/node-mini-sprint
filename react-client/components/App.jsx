@@ -1,4 +1,5 @@
 import React from 'react';
+import Server from '/server/index.js'
 
 const App = () => {
   return (
@@ -18,6 +19,26 @@ const App = () => {
   )
 };
 
+const Quote = () => {
+  var len = Server.quotes.length;
+  var randomIdx = Server.getRandomInt(0, len);
+  return (
+    <q>{Server.quotes[randomIdx]}</q>
+  );
+}
 
+const getQuote = () => {
+  var len = Server.quotes.length;
+  var randomIdx = Server.getRandomInt(0, len);
+  var quoteElem = getElementById('quote');
+  while (quoteElem.firstChild) {
+    quoteElem.removeChild(quoteElem.firstChild);
+  }
+  ReactDOM.render(<Quote />, document.getElementById('quote'));
+}
+
+const addQuote = (quote) => {
+  Server.quotes.push(quote);
+}
 
 export default App;

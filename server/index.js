@@ -83,6 +83,7 @@ app.route('/quote')
   })
   .post((req, res) => {
     quotes.push(req.text);
+    console.log(quotes);
     res.send('Quote added to library');
   })
 
