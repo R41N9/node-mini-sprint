@@ -2,6 +2,8 @@ const http = require('http');
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const path = require('path');
+const bodyParser = require('body-parser');
 
 //headers to allows CORS requests
 const headers = {
@@ -70,11 +72,13 @@ function getRandomInt(min, max) {
 // })
 
 app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../react-client/dist/')));
 
-app.get('/', (req, res) => {
-  res.redirect(301, `http://localhost:${port}/quote`);
-  res.end()
-})
+// app.get('/', (req, res) => {
+//   res.redirect(301, `http://localhost:${port}/quote`);
+//   res.end()
+// })
 
 app.route('/quote')
   .get((req, res) => {
@@ -82,8 +86,8 @@ app.route('/quote')
     res.send(`${quotes[randomIdx]}`);
   })
   .post((req, res) => {
-    quotes.push(req.text);
-    console.log(quotes);
+    console.log(req.body);
+    quotes.push(req.body.text);
     res.send('Quote added to library');
   })
 
@@ -96,3 +100,5 @@ app.listen(port, () => {
 })
 
 
+exports.getRandomInt = getRandomInt;
+exports.quotes = quotes;
