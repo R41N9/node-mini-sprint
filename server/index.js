@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 //headers to allows CORS requests
 const headers = {
@@ -62,6 +63,13 @@ function getRandomInt(min, max) {
 
 //   }
 // }
+
+// app.options((req, res) => {
+//   res.sendStatus(204)
+//   res.end()
+// })
+
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.redirect(301, `http://localhost:${port}/quote`);
