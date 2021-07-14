@@ -4,6 +4,8 @@ const app = express();
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const { conn } = require('./db/index.js')
 
 //headers to allows CORS requests
 const headers = {
@@ -19,7 +21,7 @@ const port = 3000;
 const quotes = [
   'Never should have come here!',
   'Let me guess. Someone stole your sweetroll.',
-  'Sorry lass, I\'ve got important things to do.',
+  'Sorry lass, I\'\'ve got important things to do.',
   'Kill Paarthunax',
   'My parents said not to talk to strangers, but you seem alright.'
 ];
@@ -80,14 +82,53 @@ app.use(express.static(path.join(__dirname, '../react-client/dist/')));
 //   res.end()
 // })
 
+
+
 app.route('/quote')
   .get((req, res) => {
-    randomIdx = getRandomInt(0, quotes.length);
-    res.send(`${quotes[randomIdx]}`);
+    conn.query(`DELETE FROM quotes WHERE (id >= 1 & id <= 5);`, (err, data) => {
+      if (err) {
+        data.send(err);
+      }
+      for (var i = 0; i < quotes.length; i++) {
+        conn.query(`INSERT INTO quotes (id, text) VALUES (${i + 1}, '${quotes[i]}');`, (err, data) => {
+          if (err) {
+            console.error(err);
+            data.send(err);
+          }
+          console.log('Quote Loaded');
+        })
+      }
+
+    })
+    conn.query(`SELECT MAX(id) FROM quotes`, (err, response) => {
+      if (err) {
+        console.error(err);
+        res.send(err);
+      }
+      randomIdx = getRandomInt(0, response[0]['MAX(id)']);
+      var sql = `SELECT text FROM quotes WHERE (id = ?);`
+      var queryArgs = [randomIdx]
+      conn.query(sql, queryArgs, (err, res) => {
+        if (err) {
+          console.error(err);
+          res.send(err);
+        }
+        res.send(res);
+      })
+    })
+
   })
   .post((req, res) => {
-    console.log(req.body);
-    quotes.push(req.body.text);
+    var sql = `INSERT INTO quotes (text) VALUES (?);`
+    var queryArgs = [req.body.text]
+    conn.query(sql, queryArgs, (err, data) => {
+      if (err) {
+        console.error(err);
+        data.send(err);
+      }
+      console.log(data);
+    })
     res.send('Quote added to library');
   })
 

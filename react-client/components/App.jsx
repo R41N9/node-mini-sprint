@@ -16,13 +16,13 @@ class App extends React.Component {
     e.preventDefault();
     axios.get('/quote')
     .then((data) => {
-      // console.log(data)
+      console.log(data)
       this.setState({
-        quote: data.data
+        quote: data.data[0].text
       })
     })
     .catch((err) => {
-      console.error(err);
+      console.log('getQuote error: ', err);
       throw err;
     })
   }
