@@ -99,25 +99,25 @@ app.route('/quote')
           console.log('Quote Loaded');
         })
       }
-
     })
-    conn.query(`SELECT MAX(id) FROM quotes`, (err, response) => {
-      if (err) {
-        console.error(err);
-        res.send(err);
-      }
-      randomIdx = getRandomInt(0, response[0]['MAX(id)']);
-      var sql = `SELECT text FROM quotes WHERE (id = ?);`
-      var queryArgs = [randomIdx]
-      conn.query(sql, queryArgs, (err, res) => {
+    .then(() => {
+      conn.query(`SELECT MAX(id) FROM quotes`, (err, response) => {
         if (err) {
           console.error(err);
           res.send(err);
         }
-        res.send(res);
+        randomIdx = getRandomInt(0, response[0]['MAX(id)']);
+        var sql = `SELECT text FROM quotes WHERE (id = ?);`
+        var queryArgs = [randomIdx]
+        conn.query(sql, queryArgs, (err, res) => {
+          if (err) {
+            console.error(err);
+            res.send(err);
+          }
+          res.send(res);
+        })
       })
     })
-
   })
   .post((req, res) => {
     var sql = `INSERT INTO quotes (text) VALUES (?);`
