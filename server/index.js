@@ -33,7 +33,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-var getMaxId = async() => {
+var getMaxId = async () => {
   var getCommand = `SELECT MAX(id) FROM quotes;`
   var maxId = await db.queryAsync(getCommand);
   return maxId[0]['MAX(id)'];
@@ -50,7 +50,7 @@ app.route('/quote')
   .get(async (req, res) => {
     try {
       var randomIdx = getRandomInt(1, await getMaxId() + 1);
-      var sql = `SELECT text FROM quotes WHERE (id = ?);`
+      var sql = `SELECT text FROM quotes WHERE (id = ?);`;
       var queryArgs = [randomIdx]
       var quoteData = await db.queryAsync(sql, queryArgs)
       res.send(quoteData)
@@ -60,17 +60,47 @@ app.route('/quote')
     }
   })
   .post(async (req, res) => {
-      var sql = `INSERT INTO quotes (id, text) VALUES (?, ?);`
-      var nextId = await getMaxId() + 1;
-      var queryArgs = [nextId, req.body.text];
-      try {
-        var result = await db.queryAsync(sql, queryArgs);
-        res.sendStatus(201);
-      } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-      }
-    })
+    var sql = `INSERT INTO quotes (id, text) VALUES (?, ?);`;
+    var nextId = await getMaxId() + 1;
+    var queryArgs = [nextId, req.body.text];
+    try {
+      var result = await db.queryAsync(sql, queryArgs);
+      res.sendStatus(201);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+  })
+  .put(async (req, res) => {
+    var sql = `UPDATE quotes SET (text = ?) WHERE (id = ?);`;
+    console.log(req)
+    // var queryArgs1 = [req.body[0], 1];
+    // var queryArgs2 = [req.body[1], 2];
+    // var queryArgs3 = [req.body[2], 3];
+    // var queryArgs4 = [req.body[3], 4];
+    // var queryArgs5 = [req.body[4], 5];
+    // try {
+    //   var result1 = await db.queryAsync(sql, queryArgs1);
+    //   var result2 = await db.queryAsync(sql, queryArgs2);
+    //   var result3 = await db.queryAsync(sql, queryArgs3);
+    //   var result4 = await db.queryAsync(sql, queryArgs4);
+    //   var result5 = await db.queryAsync(sql, queryArgs5);
+    //   res.sendStatus(204);
+    // } catch (err) {
+    //   console.log(err);
+    //   res.status(500).send(err);
+    // }
+  })
+  .delete(async (req, res) => {
+    var sql = `DELETE FROM quotes WHERE (id > 5);`;
+    try {
+      var result = await db.queryAsync(sql);
+      res.sendStatus(200);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+  })
 
 
 app.listen(port, () => {

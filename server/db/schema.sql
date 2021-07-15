@@ -1,4 +1,4 @@
-DROP DATABASE quotes_generator IF EXISTS;
+DROP DATABASE IF EXISTS quotes_generator;
 CREATE DATABASE quotes_generator;
 USE quotes_generator;
 
