@@ -14,6 +14,7 @@ class App extends React.Component {
 
   getQuote(e) {
     e.preventDefault();
+    console.log("hello from getQuote")
     axios.get('/quote')
     .then((data) => {
       console.log(data)
@@ -48,7 +49,7 @@ class App extends React.Component {
         <h2 id="quote">{this.state.quote}</h2>
         <form onSubmit={this.addQuote}>
           <input type="text"></input>
-          <button id="submit">Submit</button>
+          <button id="submit">Submit Quote</button>
           <p id="response"></p>
         </form>
         <form>
@@ -60,28 +61,5 @@ class App extends React.Component {
 
 };
 
-
-
-// const Quote = () => {
-//   var len = Server.exports.quotes.length;
-//   var randomIdx = Server.exports.getRandomInt(0, len);
-//   return (
-//     <q>{this.state.quotes[randomIdx]}</q>
-//   );
-// }
-
-// const getQuote = () => {
-//   var len = Server.quotes.length;
-//   var randomIdx = Server.getRandomInt(0, len);
-//   // var quoteElem = getElementById('quote');
-//   // while (quoteElem.firstChild) {
-//   //   quoteElem.removeChild(quoteElem.firstChild);
-//   // }
-//   // ReactDOM.render(<Quote />, document.getElementById('quote'));
-// }
-
-// const addQuote = (quote) => {
-//   Server.quotes.push(quote);
-// }
 
 export default App;
