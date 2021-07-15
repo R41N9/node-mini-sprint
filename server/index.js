@@ -72,24 +72,23 @@ app.route('/quote')
     }
   })
   .put(async (req, res) => {
-    var sql = `UPDATE quotes SET (text = ?) WHERE (id = ?);`;
-    console.log(req)
-    // var queryArgs1 = [req.body[0], 1];
-    // var queryArgs2 = [req.body[1], 2];
-    // var queryArgs3 = [req.body[2], 3];
-    // var queryArgs4 = [req.body[3], 4];
-    // var queryArgs5 = [req.body[4], 5];
-    // try {
-    //   var result1 = await db.queryAsync(sql, queryArgs1);
-    //   var result2 = await db.queryAsync(sql, queryArgs2);
-    //   var result3 = await db.queryAsync(sql, queryArgs3);
-    //   var result4 = await db.queryAsync(sql, queryArgs4);
-    //   var result5 = await db.queryAsync(sql, queryArgs5);
-    //   res.sendStatus(204);
-    // } catch (err) {
-    //   console.log(err);
-    //   res.status(500).send(err);
-    // }
+    var sql = `UPDATE quotes SET text = ? WHERE (id = ?);`;
+    var queryArgs1 = [req.body[0], 1];
+    var queryArgs2 = [req.body[1], 2];
+    var queryArgs3 = [req.body[2], 3];
+    var queryArgs4 = [req.body[3], 4];
+    var queryArgs5 = [req.body[4], 5];
+    try {
+      var result1 = await db.queryAsync(sql, queryArgs1);
+      var result2 = await db.queryAsync(sql, queryArgs2);
+      var result3 = await db.queryAsync(sql, queryArgs3);
+      var result4 = await db.queryAsync(sql, queryArgs4);
+      var result5 = await db.queryAsync(sql, queryArgs5);
+      res.sendStatus(204);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
   })
   .delete(async (req, res) => {
     var sql = `DELETE FROM quotes WHERE (id > 5);`;

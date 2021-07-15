@@ -1,17 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import QuoteContainer from './QuoteContainer.jsx';
+import AddQuoteForm from './AddQuoteForm.jsx';
+import GenerateQuoteForm from './GenerateQuoteForm.jsx';
+import UpdateQuotesForm from './UpdateQuotesForm.jsx';
+import DeleteQuotesForm from './DeleteQuotesForm.jsx';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      quote: ''
+      quote: '',
+      input: ''
     }
     this.getQuote = this.getQuote.bind(this);
     this.addQuote = this.addQuote.bind(this);
     this.updateQuotes = this.updateQuotes.bind(this);
     this.deleteAddedQuotes = this.deleteAddedQuotes.bind(this);
+    this.inputOnChangeHandler = this.inputOnChangeHandler.bind(this);
   }
 
   getQuote(e) {
@@ -31,10 +38,11 @@ class App extends React.Component {
 
   addQuote(e) {
     e.preventDefault();
-    var newQuote = { text: e.target[0].value }
+    var newQuote = { text: this.state.input }
     axios.post('/quote', newQuote)
     .then((response) => {
       console.log('Add Quote Response: ', response);
+      this.setState({ input: '' });
     })
     .catch((err) => {
       console.error(err);
@@ -61,7 +69,6 @@ class App extends React.Component {
 
   deleteAddedQuotes(e) {
     e.preventDefault();
-    console.log('hello from deleteAddedQuotes')
     axios.delete('/quote')
     .then((response) => {
       console.log('Delete Added Quotes Response: ', response);
@@ -71,29 +78,23 @@ class App extends React.Component {
     })
   }
 
+  inputOnChangeHandler(input) {
+    this.setState({ input: input })
+  }
+
   render() {
     return (
       <main>
         <h1>Random Quote Generator</h1>
 
-        <h2 id="quote">{this.state.quote}</h2>
-        <form onSubmit={this.addQuote}>
-          <input type="text"></input>
-          <button id="submit">Submit Quote</button>
-        </form>
-        <form>
-          <button id="get-quote" onClick={this.getQuote}>Generate Quote</button>
-        </form>
-        <form>
-          <button id="update-quotes" onClick={this.updateQuotes}>Update Default Quotes</button>
-        </form>
-        <form>
-          <button id="delete-quotes" onClick={this.deleteAddedQuotes}>Delete Added Quotes</button>
-        </form>
+        <QuoteContainer quote={this.state.quote}/>
+        <AddQuoteForm input={this.state.input} addQuote={this.addQuote} inputOnChangeHandler={this.inputOnChangeHandler}/>
+        <GenerateQuoteForm getQuote={this.getQuote}/>
+        <UpdateQuotesForm updateQuotes={this.updateQuotes}/>
+        <DeleteQuotesForm deleteAddedQuotes={this.deleteAddedQuotes}/>
       </main>
     )
   }
-
 };
 
 
